@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import pathToRegexp from 'path-to-regexp';
+
+import { RouterContext } from '../context';
+import { Unregister, Match, Params, IRouterContext } from '../types';
 
 interface Props {
   /**
@@ -25,13 +29,94 @@ interface Props {
 }
 
 export default class Route extends Component<Props> {
-  render() {
-    const { children, render } = this.props;
+  static contextType = RouterContext;
 
-    if (render) {
-      return render(true, {});
+  context!: IRouterContext;
+  keys: pathToRegexp.Key[] = [];
+  matcher = pathToRegexp(this.path(), this.keys, { end: false });
+  unregister!: Unregister;
+
+  state = {
+    match: false,
+  };
+
+  componentDidMount() {
+    this.unregister = this.context.register(this);
+  }
+
+  componentWillUnmount() {
+    this.unregister();
+  }
+
+  path() {
+    const { parentPath } = this.context;
+    const { path } = this.props;
+
+    if (!path) {
+      return parentPath;
     }
 
-    return children;
+    return (parentPath + path)
+      .replace(/\/\/|\/$/g, '/')
+      .replace(/\/+$/, '');
+  }
+
+  match(path: string) {
+    // Exclude 404 from match
+    if (this.props.noMatch) {
+      return false;
+    }
+
+    const match = this.matcher.exec(path);
+
+    if (!match) {
+      return false;
+    }
+
+    const [matchPath, ...values] = match;
+
+    if (this.props.exact && path !== matchPath) {
+      return false;
+    }
+
+    const params: Params = {};
+
+    this.keys.forEach((key, index) => {
+      params[key.name] = values[index];
+    });
+
+    return params;
+  }
+
+  update(match: Match) {
+    this.setState({ match });
+  }
+
+  renderChildren() {
+    const { children, render } = this.props;
+    const { match } = this.state;
+
+    if (render) {
+      return render(!!match, match);
+    }
+
+    if (match) {
+      return children;
+    }
+
+    return null;
+  }
+
+  render() {
+    return (
+      <RouterContext.Provider
+        value={{
+          ...this.context,
+          parentPath: this.path(),
+        }}
+      >
+        {this.renderChildren()}
+      </RouterContext.Provider>
+    );
   }
 }
