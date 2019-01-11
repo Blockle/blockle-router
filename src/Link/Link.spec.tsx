@@ -6,14 +6,13 @@ import { createMemoryHistory } from 'history';
 import Link from './Link';
 import Router from '../Router';
 
+const wait = (timeout = 50) => new Promise(resolve => setTimeout(resolve, timeout));
 let history = createMemoryHistory();
 
 afterEach(() => {
   history = createMemoryHistory();
   afterEach(cleanup);
 });
-
-const wait = (timeout = 50) => new Promise(resolve => setTimeout(resolve, timeout));
 
 describe('Link', () => {
   it('should always render Link', () => {
