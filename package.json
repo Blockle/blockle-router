@@ -13,7 +13,7 @@
   "main": "dist/blockle-router.js",
   "module": "dist/blockle-router.esm.js",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:Saartje87/blockle-router.git",
+  "repository": "git@github.com:Blockle/blockle-router.git",
   "author": "Niek Saarberg",
   "license": "MIT",
   "devDependencies": {
