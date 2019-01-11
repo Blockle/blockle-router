@@ -6,13 +6,13 @@
 Install with yarn
 
 ```bash
-yarn add @blockle/router
+yarn add @blockle/router history
 ```
 
 Install with npm
 
 ```bash
-npm install --save @blockle/router
+npm install --save @blockle/router history
 ```
 
 ### Basic example
