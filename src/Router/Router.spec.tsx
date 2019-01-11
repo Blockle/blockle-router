@@ -1,14 +1,21 @@
 import 'jest-dom/extend-expect';
 import React from 'react';
-import { render } from 'react-testing-library';
+import { render, cleanup } from 'react-testing-library';
 
 import Router from './Router';
 import { createMemoryHistory } from 'history';
 
+let history = createMemoryHistory();
+
+afterEach(() => {
+  history = createMemoryHistory();
+  afterEach(cleanup);
+});
+
 describe('Router', () => {
   it('should render children', () => {
     const { getByText } = render(
-      <Router history={createMemoryHistory()}>
+      <Router history={history}>
         Children
       </Router>,
     );

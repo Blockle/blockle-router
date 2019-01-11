@@ -35,7 +35,9 @@ export default class Link extends Component<Props> {
     const { history } = this.context;
 
     if (onClick) {
-      onClick(event);
+      event.preventDefault();
+
+      return onClick(event);
     }
 
     if (!event.defaultPrevented && event.button === 0 && !isModifiedEvent(event)) {
