@@ -8,7 +8,7 @@ interface Props {
   /**
    * Render will always be called with matching boolean and route params
    */
-  render?(match: boolean, params: any): React.ReactNode;
+  render?(match: boolean, params: Params): React.ReactNode;
   /**
    * Path expression see https://github.com/pillarjs/path-to-regexp
    */
@@ -28,7 +28,11 @@ interface Props {
   exclude?: boolean;
 }
 
-export default class Route extends Component<Props> {
+interface State {
+  match: false | Params;
+}
+
+export default class Route extends Component<Props, State> {
   static contextType = RouterContext;
 
   context!: IRouterContext;
@@ -37,7 +41,7 @@ export default class Route extends Component<Props> {
   unregister!: Unregister;
 
   state = {
-    match: false,
+    match: false as false,
   };
 
   componentDidMount() {
@@ -97,7 +101,7 @@ export default class Route extends Component<Props> {
     const { match } = this.state;
 
     if (render) {
-      return render(!!match, match);
+      return render(!!match, match || {});
     }
 
     if (match) {
