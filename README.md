@@ -1,5 +1,7 @@
 # blockle-router
 
+Tiny router for React ~3k gzip.  
+Customisable with history
 
 ## Get started
 
@@ -15,14 +17,14 @@ Install with npm
 npm install --save @blockle/router history
 ```
 
-### Basic example
+### Example
 
 ```tsx
 import { Router, Route, Link } from '@blockle/router';
-import { createHashHistory } from 'history';
+import createHistory from 'history/createBrowserHistory';
 
 render(
-  <Router history={createHashHistory}>
+  <Router history={createHistory}>
     <Route path="/" exact>
       Home
       <Link to="/contact">Contact</Link>
@@ -30,6 +32,48 @@ render(
     <Route path="/contact">
       Contact
       <Link to="/">Home</Link>
+    </Route>
+  </Router>
+);
+```
+
+### Route params
+
+```tsx
+import { Router, Route, Link } from '@blockle/router';
+import createHistory from 'history/createBrowserHistory';
+
+render(
+  <Router history={createHistory}>
+    <Route 
+      path="/detail/:id/:name"
+      render={(match, { id, name }) => {
+        match &&
+          <pre>
+            {id} - {name}
+          </pre>
+      }}      
+    />
+  </Router>
+);
+```
+
+### 404
+
+```tsx
+import { Router, Route, Link } from '@blockle/router';
+import createHistory from 'history/createBrowserHistory';
+
+render(
+  <Router history={createHistory}>
+    <Route path="/contact">
+      Contact
+    </Route>
+    <Route path="/about">
+      Contact
+    </Route>
+    <Route noMatch>
+      Route not found
     </Route>
   </Router>
 );
