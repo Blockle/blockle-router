@@ -18,7 +18,7 @@ interface Props {
    */
   exact?: boolean;
   /**
-   * Render when no routes are matched
+   * Render when no routes are matched "404"
    */
   noMatch?: boolean;
   /**
