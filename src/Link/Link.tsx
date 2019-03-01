@@ -11,7 +11,7 @@ interface Props {
   noMatch?: boolean;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   path?: string;
-  renderAs: string;
+  renderAs: string | React.ReactElement<any>;
   replace?: boolean;
   to: string;
 }
@@ -53,26 +53,26 @@ export default class Link extends Component<Props> {
 
   renderLink = (match: boolean) => {
     const { activeClassName, className, children, renderAs, to } = this.props;
+    const props = {
+      'data-href': to,
+      onClick: this.clickHandler,
+      className: `${className} ${match ? activeClassName : ''}`,
+    };
 
-    return React.createElement(
-      renderAs,
-      {
-        [renderAs === 'a' ? 'href' : 'data-href']: to,
-        onClick: this.clickHandler,
-        className: `${className} ${match ? activeClassName : ''}`,
-      },
-      children,
-    );
+    if (typeof renderAs !== 'string') {
+      return React.cloneElement(renderAs, props, children);
+    }
+
+    return React.createElement(renderAs, props, children);
   }
 
   render() {
-    const { path, exact, noMatch } = this.props;
+    const { path, exact } = this.props;
 
     return (
       <Route
         path={path}
         exact={exact}
-        noMatch={noMatch}
         render={this.renderLink}
         exclude
       />
