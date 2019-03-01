@@ -1,6 +1,6 @@
 {
   "name": "@blockle/router",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Blockle React Router",
   "scripts": {
     "start": "npm run build:ts -- -w | npm run build:types -- -w",
