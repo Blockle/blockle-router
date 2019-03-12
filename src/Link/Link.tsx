@@ -10,7 +10,6 @@ interface Props {
   exact?: boolean;
   noMatch?: boolean;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-  path?: string;
   renderAs: string | React.ReactElement<any>;
   replace?: boolean;
   to: string;
@@ -67,11 +66,11 @@ export default class Link extends Component<Props> {
   }
 
   render() {
-    const { path, exact } = this.props;
+    const { to, exact } = this.props;
 
     return (
       <Route
-        path={path}
+        path={to}
         exact={exact}
         render={this.renderLink}
         exclude
