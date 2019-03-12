@@ -3,12 +3,13 @@ import pathToRegexp from 'path-to-regexp';
 
 import { RouterContext } from '../context';
 import { Unregister, Match, Params, IRouterContext } from '../types';
+import { useRoute } from 'hooks';
 
 interface Props {
   /**
    * Render will always be called with matching boolean and route params
    */
-  render?(match: boolean, params: Params): React.ReactNode;
+  render?: (match: boolean, params: Params) => React.ReactNode;
   /**
    * Path expression see https://github.com/pillarjs/path-to-regexp
    */
@@ -26,13 +27,34 @@ interface Props {
    * Usefull for creating Link like component
    */
   exclude?: boolean;
+  children?: React.ReactNode;
 }
 
 interface State {
   match: false | Params;
 }
 
-export default class Route extends Component<Props, State> {
+const Route = ({ children, render }: Props) => {
+  const { match, params } = useRoute('/foo/:bar');
+
+  console.log(match, params);
+
+  if (render) {
+    return render(match, params) as JSX.Element;
+  }
+
+  if (match) {
+    // return (<RouterContext.Provider values={{ ...context, path }}>{children}</RouterContext.Provider>);
+
+    return children as JSX.Element;
+  }
+
+  return null;
+};
+
+export default Route;
+
+export class Routez extends Component<Props, State> {
   static contextType = RouterContext;
 
   context!: IRouterContext;
