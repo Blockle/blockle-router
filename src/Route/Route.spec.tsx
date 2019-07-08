@@ -1,6 +1,6 @@
 import 'jest-dom/extend-expect';
 import React from 'react';
-import { render, waitForElement, cleanup } from 'react-testing-library';
+import { render, waitForElement, cleanup } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 
 import Route from './Route';

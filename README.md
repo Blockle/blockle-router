@@ -1,6 +1,6 @@
 # blockle-router
 
-Tiny router for React ~3k gzip.  
+Lightweight (browser only) router for React ~3k gzip.  
 Customisable with history
 
 ## Get started
@@ -8,13 +8,13 @@ Customisable with history
 Install with yarn
 
 ```bash
-yarn add @blockle/router history
+yarn add @blockle/router
 ```
 
 Install with npm
 
 ```bash
-npm install --save @blockle/router history
+npm install --save @blockle/router
 ```
 
 ### Example
@@ -45,14 +45,14 @@ import createHistory from 'history/createBrowserHistory';
 
 render(
   <Router history={createHistory}>
-    <Route 
+    <Route
       path="/detail/:id/:name"
       render={(match, { id, name }) => {
         match &&
           <pre>
             {id} - {name}
           </pre>
-      }}      
+      }}
     />
   </Router>
 );
