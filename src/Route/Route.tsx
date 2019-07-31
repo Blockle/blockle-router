@@ -12,7 +12,7 @@ interface Props {
   /**
    * Path expression see https://github.com/pillarjs/path-to-regexp
    */
-  path?: string;
+  path?: string | string[];
   /**
    * Path must be an exact match
    */
@@ -37,7 +37,7 @@ export default class Route extends Component<Props, State> {
 
   context!: IRouterContext;
   keys: pathToRegexp.Key[] = [];
-  matcher = pathToRegexp(this.path(), this.keys, { end: false });
+  matchers: RegExp[] = [];
   unregister!: Unregister;
 
   state = {
@@ -52,9 +52,8 @@ export default class Route extends Component<Props, State> {
     this.unregister();
   }
 
-  path() {
+  createPath(path: string) {
     const { parentPath } = this.context;
-    const { path } = this.props;
 
     if (!path) {
       return parentPath;
@@ -65,31 +64,59 @@ export default class Route extends Component<Props, State> {
       .replace(/\/+$/, '');
   }
 
+  getParentPath() {
+    const { path } = this.props;
+
+    return this.createPath(Array.isArray(path) ? path[0] : path || '');
+  }
+
+  getMatchers() {
+    const { path } = this.props;
+
+    if (!path) {
+      throw new Error('Route :: No path set');
+    }
+
+    const paths = typeof path === 'string' ? [path] : path;
+
+    if (!this.matchers.length) {
+      this.matchers = paths.map(path => pathToRegexp(this.createPath(path), this.keys, { end: false }));
+    }
+
+    return this.matchers;
+  }
+
   match(path: string) {
     // Exclude 404 from match
     if (this.props.noMatch) {
       return false;
     }
 
-    const match = this.matcher.exec(path);
+    const matchers = this.getMatchers();
 
-    if (!match) {
-      return false;
+    // tslint:disable-next-line:no-increment-decrement
+    for (let i = 0 ; i < matchers.length; i++) {
+      const match = matchers[i].exec(path);
+
+      if (!match) {
+        continue;
+      }
+
+      const [matchPath, ...values] = match;
+      const params: Params = {};
+
+      if (this.props.exact && path !== matchPath) {
+        continue;
+      }
+
+      this.keys.forEach((key, index) => {
+        params[key.name] = values[index];
+      });
+
+      return params;
     }
 
-    const [matchPath, ...values] = match;
-
-    if (this.props.exact && path !== matchPath) {
-      return false;
-    }
-
-    const params: Params = {};
-
-    this.keys.forEach((key, index) => {
-      params[key.name] = values[index];
-    });
-
-    return params;
+    return false;
   }
 
   update(match: Match) {
@@ -116,7 +143,7 @@ export default class Route extends Component<Props, State> {
       <RouterContext.Provider
         value={{
           ...this.context,
-          parentPath: this.path(),
+          parentPath: this.getParentPath(),
         }}
       >
         {this.renderChildren()}

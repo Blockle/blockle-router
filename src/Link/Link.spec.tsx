@@ -1,4 +1,3 @@
-import 'jest-dom/extend-expect';
 import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import { render, fireEvent, cleanup } from '@testing-library/react';
@@ -34,14 +33,14 @@ describe('Link', () => {
     const { getByText } = render(
       <Router history={history}>
         <Link to="/test-route">
-          Link
+          LinkContent
         </Link>
       </Router>,
     );
 
     await wait();
 
-    expect(getByText('Link')).toHaveClass('is-active');
+    expect(getByText('LinkContent')).toHaveClass('is-active');
   });
 
   it('should change location when Link got clicked', (done) => {
