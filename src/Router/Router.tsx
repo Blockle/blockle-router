@@ -42,25 +42,25 @@ export default class Router extends Component<Props> {
       group.splice(group.indexOf(route), 1);
       this.requestUpdate();
     };
-  }
+  };
 
   requestUpdate = () => {
     cancelAnimationFrame(this.raf);
     this.raf = requestAnimationFrame(this.update);
-  }
+  };
 
   update = () => {
     const { pathname } = this.props.history.location;
     const groups = Object.values(this.routeGroups);
 
     groups.forEach(group => this.updateRouteGroup(pathname, group));
-  }
+  };
 
   updateRouteGroup(path: string, group: RouteComponent[]) {
     const nonMatchingRoutes: RouteComponent[] = [];
     let matchFound = false;
 
-    group.forEach((route) => {
+    group.forEach(route => {
       const match = route.match(path);
 
       // Update 404 elements later on

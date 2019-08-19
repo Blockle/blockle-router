@@ -39,7 +39,11 @@ export default class Link extends Component<Props> {
       return onClick(event);
     }
 
-    if (!event.defaultPrevented && event.button === 0 && !isModifiedEvent(event)) {
+    if (
+      !event.defaultPrevented &&
+      event.button === 0 &&
+      !isModifiedEvent(event)
+    ) {
       event.preventDefault();
 
       if (replace) {
@@ -48,7 +52,7 @@ export default class Link extends Component<Props> {
         history.push(to);
       }
     }
-  }
+  };
 
   renderLink = (match: boolean) => {
     const { activeClassName, className, children, renderAs, to } = this.props;
@@ -63,18 +67,11 @@ export default class Link extends Component<Props> {
     }
 
     return React.createElement(renderAs, props, children);
-  }
+  };
 
   render() {
     const { to, exact } = this.props;
 
-    return (
-      <Route
-        path={to}
-        exact={exact}
-        render={this.renderLink}
-        exclude
-      />
-    );
+    return <Route path={to} exact={exact} render={this.renderLink} exclude />;
   }
 }

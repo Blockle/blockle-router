@@ -59,9 +59,7 @@ export default class Route extends Component<Props, State> {
       return parentPath;
     }
 
-    return (parentPath + path)
-      .replace(/\/\/|\/$/g, '/')
-      .replace(/\/+$/, '');
+    return (parentPath + path).replace(/\/\/|\/$/g, '/').replace(/\/+$/, '');
   }
 
   getParentPath() {
@@ -80,7 +78,9 @@ export default class Route extends Component<Props, State> {
     const paths = typeof path === 'string' ? [path] : path;
 
     if (!this.matchers.length) {
-      this.matchers = paths.map(path => pathToRegexp(this.createPath(path), this.keys, { end: false }));
+      this.matchers = paths.map(path =>
+        pathToRegexp(this.createPath(path), this.keys, { end: false }),
+      );
     }
 
     return this.matchers;
@@ -95,7 +95,7 @@ export default class Route extends Component<Props, State> {
     const matchers = this.getMatchers();
 
     // tslint:disable-next-line:no-increment-decrement
-    for (let i = 0 ; i < matchers.length; i++) {
+    for (let i = 0; i < matchers.length; i++) {
       const match = matchers[i].exec(path);
 
       if (!match) {

@@ -6,7 +6,8 @@ import { createMemoryHistory } from 'history';
 import Link from './Link';
 import Router from '../Router';
 
-const wait = (timeout = 50) => new Promise(resolve => setTimeout(resolve, timeout));
+const wait = (timeout = 50) =>
+  new Promise(resolve => setTimeout(resolve, timeout));
 let history = createMemoryHistory();
 
 afterEach(() => {
@@ -18,9 +19,7 @@ describe('Link', () => {
   it('should always render Link', () => {
     const { getByText } = render(
       <Router history={history}>
-        <Link to="/">
-          Link
-        </Link>
+        <Link to="/">Link</Link>
       </Router>,
     );
 
@@ -32,9 +31,7 @@ describe('Link', () => {
 
     const { getByText } = render(
       <Router history={history}>
-        <Link to="/test-route">
-          LinkContent
-        </Link>
+        <Link to="/test-route">LinkContent</Link>
       </Router>,
     );
 
@@ -43,16 +40,14 @@ describe('Link', () => {
     expect(getByText('LinkContent')).toHaveClass('is-active');
   });
 
-  it('should change location when Link got clicked', (done) => {
+  it('should change location when Link got clicked', done => {
     const { getByText } = render(
       <Router history={history}>
-        <Link to="/test-route">
-          Test Route
-        </Link>
+        <Link to="/test-route">Test Route</Link>
       </Router>,
     );
 
-    history.listen((location) => {
+    history.listen(location => {
       expect(location.pathname).toBe('/test-route');
       done();
     });
