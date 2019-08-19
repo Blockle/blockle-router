@@ -3,12 +3,13 @@
   "version": "1.2.1",
   "description": "Blockle React Router",
   "scripts": {
-    "start": "npm run build:ts -- -w | npm run build:types -- -w",
-    "build": "rm -rf ./dist/ && npm run build:ts && npm run build:types",
     "build:ts": "rollup -c",
     "build:types": "tsc -d --emitDeclarationOnly",
-    "test": "jest",
-    "lint": "tslint -p tsconfig.json"
+    "build": "rm -rf ./dist/ && npm run build:ts && npm run build:types",
+    "format": "prettier --write \"**/*\"",
+    "lint": "eslint -p tsconfig.json",
+    "start": "npm run build:ts -- -w | npm run build:types -- -w",
+    "test": "jest"
   },
   "files": [
     "dist"
@@ -20,17 +21,19 @@
   "author": "Niek Saarberg",
   "license": "MIT",
   "devDependencies": {
-    "@exmg/tslint-config": "^1.0.1",
     "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^8.0.7",
     "@types/history": "^4.7.2",
     "@types/jest": "^24.0.16",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.5",
+    "eslint-plugin-prettier": "^3.1.0",
     "history": "^4.9.0",
     "jest": "^24.8.0",
     "postcss-import": "^12.0.1",
     "postcss-preset-env": "^6.7.0",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "rollup": "^1.17.0",
@@ -39,7 +42,6 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-typescript2": "^0.22.1",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.18.0",
     "typescript": "^3.5.3"
   },
   "peerDependencies": {
