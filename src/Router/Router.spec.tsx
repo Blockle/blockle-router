@@ -14,11 +14,7 @@ afterEach(() => {
 
 describe('Router', () => {
   it('should render children', () => {
-    const { getByText } = render(
-      <Router history={history}>
-        Children
-      </Router>,
-    );
+    const { getByText } = render(<Router history={history}>Children</Router>);
 
     expect(getByText('Children')).toBeTruthy();
   });

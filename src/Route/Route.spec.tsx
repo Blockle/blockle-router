@@ -6,7 +6,8 @@ import { createMemoryHistory } from 'history';
 import Route from './Route';
 import Router from '../Router';
 
-const wait = (timeout = 50) => new Promise(resolve => setTimeout(resolve, timeout));
+const wait = (timeout = 50) =>
+  new Promise(resolve => setTimeout(resolve, timeout));
 let history = createMemoryHistory();
 
 afterEach(() => {
@@ -72,8 +73,12 @@ describe('Route', () => {
 
     const { getByText } = render(
       <Router history={history}>
-        <Route path="/" exact>HOME</Route>
-        <Route path="/foo" exact>EXACT</Route>
+        <Route path="/" exact>
+          HOME
+        </Route>
+        <Route path="/foo" exact>
+          EXACT
+        </Route>
       </Router>,
     );
 
@@ -107,9 +112,12 @@ describe('Route', () => {
           path="/foo/:bar/:baz"
           render={
             // tslint:disable-next-line
-            (match, params) => (
-              match && <span>{params.bar} - {params.baz}</span>
-            )
+            (match, params) =>
+              match && (
+                <span>
+                  {params.bar} - {params.baz}
+                </span>
+              )
           }
         />
       </Router>,
