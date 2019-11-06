@@ -5,7 +5,6 @@ export interface RouterContext {
 }
 
 export interface RouteGroupContext {
-  noMatch: boolean;
   baseUrl: string;
   register: (route: RouteRef) => () => void;
 }

@@ -6,7 +6,6 @@ import {
 
 export const RouteGroupContext = createContext<IRouteGroupContext>({
   baseUrl: '',
-  noMatch: false,
   register: () => () => {},
 });
 

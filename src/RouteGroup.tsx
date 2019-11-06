@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState, useMemo } from 'react';
+import React, { useContext, useEffect, useRef, useMemo } from 'react';
 import { RouteGroupContext, RouterContext } from './context';
 import { RouteGroupContext as IRouteGroupContext, RouteRef } from './types';
 
@@ -9,11 +9,9 @@ interface RouteGroupProps {
 const RouteGroup = ({ children }: RouteGroupProps) => {
   const { history } = useContext(RouterContext);
   const routes = useRef<RouteRef[]>([]);
-  const [noMatch, setNoMatch] = useState(false);
   const context = useMemo(
     (): IRouteGroupContext => ({
       baseUrl: '',
-      noMatch: false,
       register: route => {
         routes.current = [...routes.current, route];
 
@@ -22,44 +20,39 @@ const RouteGroup = ({ children }: RouteGroupProps) => {
         };
       },
     }),
-    [noMatch],
+    [],
   );
-
-  // useEffect(() => {
-  //   console.log('KEKEKE', routes.current);
-  // }, [routes.current.length]);
 
   useEffect(() => {
     const update = () => {
       const { pathname } = history.location;
       let containsMatch = false;
 
-      console.log('checkng', [...routes.current]);
-
-      routes.current.forEach(({ paths, noMatch, setMatch }) => {
-        // Skip "404" routes
-        if (noMatch) {
-          return;
-        }
-
-        const match = paths.some(path => {
-          const match = path.exec(pathname);
-
-          if (match) {
-            containsMatch = true;
+      const noMatchRoutes = routes.current.filter(
+        ({ paths, noMatch, setMatch }) => {
+          // Skip "404" routes
+          if (noMatch) {
+            return true;
           }
 
-          return !!match;
-        });
+          const match = paths.some(path => {
+            const match = path.exec(pathname);
 
-        //
-        setMatch(match);
-      });
+            if (match) {
+              containsMatch = true;
+            }
 
-      if (!containsMatch) {
-        console.log('404');
-        setNoMatch(true);
-      }
+            return !!match;
+          });
+
+          //
+          setMatch(match);
+
+          return false;
+        },
+      );
+
+      noMatchRoutes.forEach(({ setMatch }) => setMatch(!containsMatch));
     };
 
     history.listen(update);

@@ -39,11 +39,7 @@ const Route = ({
   const [match, setMatch] = useState(false); // TODO Check to render here? For first render
 
   useEffect(() => {
-    if (!path) {
-      return;
-    }
-
-    const paths = mapPathsToRegex(path, exact);
+    const paths = mapPathsToRegex(path || '', exact);
 
     return context.register({
       paths,
