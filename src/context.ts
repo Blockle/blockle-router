@@ -1,7 +1,15 @@
-import React from 'react';
+import { createContext } from 'react';
+import {
+  RouteGroupContext as IRouteGroupContext,
+  RouterContext as IRouterContext,
+} from './types';
 
-import { IRouterContext } from './types';
+export const RouteGroupContext = createContext<IRouteGroupContext>({
+  baseUrl: '',
+  noMatch: false,
+  register: () => () => {},
+});
 
-export const RouterContext = React.createContext<IRouterContext>(
-  {} as IRouterContext,
-);
+export const RouterContext = createContext<IRouterContext>({
+  history: null as any,
+});

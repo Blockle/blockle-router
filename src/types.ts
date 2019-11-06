@@ -1,15 +1,19 @@
 import { History } from 'history';
 
-export type Unregister = () => void;
-export type RouteComponent = any;
-export type Match = Params | false;
-
-export interface Params {
-  [key: string]: string;
+export interface RouterContext {
+  history: History;
 }
 
-export interface IRouterContext {
-  history: History;
-  parentPath: string;
-  register: (route: any) => Unregister;
+export interface RouteGroupContext {
+  noMatch: boolean;
+  baseUrl: string;
+  register: (route: RouteRef) => () => void;
+}
+
+export type Params = Record<string, string>;
+
+export interface RouteRef {
+  paths: RegExp[];
+  setMatch: (match: boolean) => void;
+  noMatch: boolean;
 }
