@@ -12,7 +12,7 @@ export interface RouteGroupContext {
 export type Params = Record<string, string>;
 
 export interface RouteRef {
-  paths: RegExp[];
-  setMatch: (match: boolean) => void;
+  matcher: (pathname: string) => null | Params;
+  setMatch: (match: null | Params) => void;
   noMatch: boolean;
 }

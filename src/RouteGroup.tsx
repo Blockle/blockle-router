@@ -29,21 +29,17 @@ const RouteGroup = ({ children }: RouteGroupProps) => {
       let containsMatch = false;
 
       const noMatchRoutes = routes.current.filter(
-        ({ paths, noMatch, setMatch }) => {
+        ({ matcher, noMatch, setMatch }) => {
           // Skip "404" routes
           if (noMatch) {
             return true;
           }
 
-          const match = paths.some(path => {
-            const match = path.exec(pathname);
+          const match = matcher(pathname);
 
-            if (match) {
-              containsMatch = true;
-            }
-
-            return !!match;
-          });
+          if (match) {
+            containsMatch = true;
+          }
 
           //
           setMatch(match);
@@ -52,7 +48,9 @@ const RouteGroup = ({ children }: RouteGroupProps) => {
         },
       );
 
-      noMatchRoutes.forEach(({ setMatch }) => setMatch(!containsMatch));
+      noMatchRoutes.forEach(({ setMatch }) =>
+        setMatch(containsMatch ? null : {}),
+      );
     };
 
     history.listen(update);
