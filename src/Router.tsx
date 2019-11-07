@@ -13,7 +13,7 @@ const Router = ({ children, history }: RouterProps) => {
 
   return (
     <RouterContext.Provider value={context}>
-      <RouteGroup>{children}</RouteGroup>
+      <RouteGroup baseUrl="/">{children}</RouteGroup>
     </RouterContext.Provider>
   );
 };

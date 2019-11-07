@@ -5,7 +5,7 @@ import {
 } from './types';
 
 export const RouteGroupContext = React.createContext<IRouteGroupContext>({
-  baseUrl: '',
+  baseUrl: '/',
   register: () => () => {},
 });
 

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Params } from './types';
 import { RouteGroupContext, RouterContext } from './context';
 import { createMatcher } from './createMatcher';
+import RouteGroup from './RouteGroup';
 
 interface RouteProps {
   render?(match: boolean, params: Params): React.ReactNode;
@@ -12,6 +13,18 @@ interface RouteProps {
   children?: React.ReactNode;
 }
 
+const renderRoute = ({ render, children, match }: any) => {
+  if (render) {
+    return render(!!match, match || {}) as JSX.Element;
+  }
+
+  if (match) {
+    return <>{children}</>;
+  }
+
+  return null;
+};
+
 const Route = ({
   children,
   noMatch = false,
@@ -20,12 +33,17 @@ const Route = ({
   render,
 }: RouteProps) => {
   const { history } = useContext(RouterContext);
+  const parentUrl = useContext(RouteGroupContext).baseUrl;
   const paths = Array.isArray(path) ? path : [path];
-  const matcher = useMemo(() => createMatcher(paths, exact), paths);
+  // Prepend parentUrl and format route string.
+  const fullPaths = paths.map(path =>
+    (parentUrl + '/' + path).replace(/\/+/g, '/').replace(/\/$/, ''),
+  );
+  const matcher = useMemo(() => createMatcher(fullPaths, exact), paths);
   // Register to group
   const context = useContext(RouteGroupContext);
   const [match, setMatch] = useState<null | Params>(
-    matcher(history.location.pathname),
+    noMatch ? null : matcher(history.location.pathname),
   );
 
   useEffect(() => {
@@ -36,15 +54,11 @@ const Route = ({
     });
   }, paths);
 
-  if (render) {
-    return render(!!match, match || {}) as JSX.Element;
-  }
-
-  if (match) {
-    return <>{children}</>;
-  }
-
-  return null;
+  return (
+    <RouteGroup baseUrl={fullPaths[0]}>
+      {renderRoute({ render, match, children })}
+    </RouteGroup>
+  );
 };
 
 export default Route;

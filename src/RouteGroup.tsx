@@ -4,14 +4,17 @@ import { RouteGroupContext as IRouteGroupContext, RouteRef } from './types';
 
 interface RouteGroupProps {
   children: React.ReactNode;
+  baseUrl?: string;
 }
 
-const RouteGroup = ({ children }: RouteGroupProps) => {
+const RouteGroup = ({ children, baseUrl }: RouteGroupProps) => {
   const { history } = useContext(RouterContext);
+  const parentContext = useContext(RouteGroupContext);
   const routes = useRef<RouteRef[]>([]);
+
   const context = useMemo(
     (): IRouteGroupContext => ({
-      baseUrl: '',
+      baseUrl: baseUrl || parentContext.baseUrl,
       register: route => {
         routes.current = [...routes.current, route];
 
