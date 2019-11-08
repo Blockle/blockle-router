@@ -31,29 +31,25 @@ const RouteGroup = ({ children, baseUrl }: RouteGroupProps) => {
       const { pathname } = history.location;
       let containsMatch = false;
 
-      const noMatchRoutes = routes.current.filter(
-        ({ matcher, noMatch, setMatch }) => {
-          // Skip "404" routes
-          if (noMatch) {
-            return true;
-          }
+      const noMatchRoutes = routes.current.filter(({ matcher, noMatch, setMatch }) => {
+        // Skip "404" routes
+        if (noMatch) {
+          return true;
+        }
 
-          const match = matcher(pathname);
+        const match = matcher(pathname);
 
-          if (match) {
-            containsMatch = true;
-          }
+        if (match) {
+          containsMatch = true;
+        }
 
-          //
-          setMatch(match);
+        //
+        setMatch(match);
 
-          return false;
-        },
-      );
+        return false;
+      });
 
-      noMatchRoutes.forEach(({ setMatch }) =>
-        setMatch(containsMatch ? null : {}),
-      );
+      noMatchRoutes.forEach(({ setMatch }) => setMatch(containsMatch ? null : {}));
     };
 
     history.listen(update);
@@ -62,11 +58,7 @@ const RouteGroup = ({ children, baseUrl }: RouteGroupProps) => {
     update();
   }, []);
 
-  return (
-    <RouteGroupContext.Provider value={context}>
-      {children}
-    </RouteGroupContext.Provider>
-  );
+  return <RouteGroupContext.Provider value={context}>{children}</RouteGroupContext.Provider>;
 };
 
 export default RouteGroup;

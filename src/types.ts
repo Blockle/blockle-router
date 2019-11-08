@@ -13,6 +13,6 @@ export type Params = Record<string, string>;
 
 export interface RouteRef {
   matcher: (pathname: string) => null | Params;
-  setMatch: (match: null | Params) => void;
   noMatch: boolean;
+  setMatch: (match: null | Params) => void;
 }

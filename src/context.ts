@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  RouteGroupContext as IRouteGroupContext,
-  RouterContext as IRouterContext,
-} from './types';
+import { RouteGroupContext as IRouteGroupContext, RouterContext as IRouterContext } from './types';
 
 export const RouteGroupContext = React.createContext<IRouteGroupContext>({
   baseUrl: '/',

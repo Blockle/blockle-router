@@ -25,28 +25,25 @@ const renderRoute = ({ render, children, match }: any) => {
   return null;
 };
 
-const Route = ({
-  children,
-  noMatch = false,
-  path = '',
-  exact = false,
-  render,
-}: RouteProps) => {
+const createPath = (parentPath: string) => (path: string) =>
+  (parentPath + '/' + path).replace(/\/+/g, '/').replace(/\/$/, '');
+
+const Route = ({ children, noMatch = false, path = '', exact = false, render }: RouteProps) => {
   const { history } = useContext(RouterContext);
   const parentUrl = useContext(RouteGroupContext).baseUrl;
   const paths = Array.isArray(path) ? path : [path];
-  // Prepend parentUrl and format route string.
-  const fullPaths = paths.map(path =>
-    (parentUrl + '/' + path).replace(/\/+/g, '/').replace(/\/$/, ''),
+  // Prepend parentUrl to given paths
+  const fullPaths = paths.map(createPath(parentUrl));
+  const initialMatch = useMemo(
+    () => (noMatch ? null : createMatcher(fullPaths, exact)(history.location.pathname)),
+    [],
   );
-  const matcher = useMemo(() => createMatcher(fullPaths, exact), paths);
-  // Register to group
   const context = useContext(RouteGroupContext);
-  const [match, setMatch] = useState<null | Params>(
-    noMatch ? null : matcher(history.location.pathname),
-  );
+  const [match, setMatch] = useState<null | Params>(initialMatch);
 
   useEffect(() => {
+    const matcher = createMatcher(fullPaths, exact);
+
     return context.register({
       matcher,
       setMatch,
@@ -54,11 +51,7 @@ const Route = ({
     });
   }, paths);
 
-  return (
-    <RouteGroup baseUrl={fullPaths[0]}>
-      {renderRoute({ render, match, children })}
-    </RouteGroup>
-  );
+  return <RouteGroup baseUrl={fullPaths[0]}>{renderRoute({ render, match, children })}</RouteGroup>;
 };
 
 export default Route;
