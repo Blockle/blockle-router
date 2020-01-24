@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react';
+import React, { useContext, useState, useMemo, useLayoutEffect } from 'react';
 import { Params } from './types';
 import { RouteGroupContext, RouterContext } from './context';
 import { createMatcher } from './createMatcher';
@@ -41,7 +41,7 @@ const Route = ({ children, noMatch = false, path = '', exact = false, render }: 
   const context = useContext(RouteGroupContext);
   const [match, setMatch] = useState<null | Params>(initialMatch);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const matcher = createMatcher(fullPaths, exact);
 
     return context.register({
