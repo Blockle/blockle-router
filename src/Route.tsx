@@ -1,8 +1,8 @@
-import React, { useContext, useState, useMemo, useLayoutEffect } from 'react';
-import { Params } from './types';
+import React, { useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { RouteGroupContext, RouterContext } from './context';
 import { createMatcher } from './createMatcher';
 import RouteGroup from './RouteGroup';
+import { Params } from './types';
 
 interface RouteProps {
   render?(match: boolean, params: Params): React.ReactNode;

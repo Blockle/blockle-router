@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { RouteGroupContext, RouterContext } from './context';
 import { RouteGroupContext as IRouteGroupContext, RouteRef } from './types';
 
@@ -52,10 +52,12 @@ const RouteGroup = ({ children, baseUrl }: RouteGroupProps) => {
       noMatchRoutes.forEach(({ setMatch }) => setMatch(containsMatch ? null : {}));
     };
 
-    history.listen(update);
+    const unlisten = history.listen(update);
 
     // Initial render
     update();
+
+    return unlisten;
   }, []);
 
   return <RouteGroupContext.Provider value={context}>{children}</RouteGroupContext.Provider>;

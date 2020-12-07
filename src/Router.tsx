@@ -1,7 +1,7 @@
-import React from 'react';
-import RouteGroup from './RouteGroup';
 import { History } from 'history';
+import React from 'react';
 import { RouterContext } from './context';
+import RouteGroup from './RouteGroup';
 
 interface RouterProps {
   children: React.ReactNode;
