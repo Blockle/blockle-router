@@ -9,7 +9,7 @@ interface Props {
   baseUrl?: string;
 }
 
-export const Router: FC<Props> = ({ children, history, baseUrl = '' }) => {
+export const Router: FC<Props> = ({ children, history, baseUrl = '/' }) => {
   return (
     <RouterContext.Provider value={{ history }}>
       <RouteGroup baseUrl={baseUrl}>{children}</RouteGroup>
