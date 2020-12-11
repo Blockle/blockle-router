@@ -1,4 +1,4 @@
-export { default as Route } from './Route';
-export { default as RouteGroup } from './RouteGroup';
-export { default as Router } from './Router';
-export { useHistory } from './useHistory';
+export { Route } from './components/Route';
+export { RouteGroup } from './components/RouteGroup';
+export { Router } from './components/Router';
+export { useHistory } from './hooks/useHistory';
