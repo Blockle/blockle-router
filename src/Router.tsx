@@ -1,5 +1,5 @@
 import { History } from 'history';
-import React from 'react';
+import React, { FC } from 'react';
 import { RouterContext } from './context';
 import RouteGroup from './RouteGroup';
 
@@ -8,7 +8,7 @@ interface RouterProps {
   history: History;
 }
 
-const Router = ({ children, history }: RouterProps) => {
+const Router: FC<RouterProps> = ({ children, history }) => {
   const context = { history };
 
   return (

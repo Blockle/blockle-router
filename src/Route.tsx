@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect, useMemo, useState } from 'react';
+import React, { FC, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { RouteGroupContext, RouterContext } from './context';
 import { createMatcher } from './createMatcher';
 import RouteGroup from './RouteGroup';
@@ -28,7 +28,7 @@ const renderRoute = ({ render, children, match }: any) => {
 const createPath = (parentPath: string) => (path: string) =>
   (parentPath + '/' + path).replace(/\/+/g, '/').replace(/\/$/, '');
 
-const Route = ({ children, noMatch = false, path = '', exact = false, render }: RouteProps) => {
+const Route: FC<RouteProps> = ({ children, noMatch = false, path = '', exact = false, render }) => {
   const { history } = useContext(RouterContext);
   const parentUrl = useContext(RouteGroupContext).baseUrl;
   const paths = Array.isArray(path) ? path : [path];
@@ -40,6 +40,7 @@ const Route = ({ children, noMatch = false, path = '', exact = false, render }: 
   );
   const context = useContext(RouteGroupContext);
   const [match, setMatch] = useState<null | Params>(initialMatch);
+  const baseUrl = fullPaths[0];
 
   useLayoutEffect(() => {
     const matcher = createMatcher(fullPaths, exact);
@@ -51,7 +52,7 @@ const Route = ({ children, noMatch = false, path = '', exact = false, render }: 
     });
   }, paths);
 
-  return <RouteGroup baseUrl={fullPaths[0]}>{renderRoute({ render, match, children })}</RouteGroup>;
+  return <RouteGroup baseUrl={baseUrl}>{renderRoute({ render, match, children })}</RouteGroup>;
 };
 
 export default Route;

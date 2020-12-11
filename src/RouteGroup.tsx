@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useRef } from 'react';
 import { RouteGroupContext, RouterContext } from './context';
 import { RouteGroupContext as IRouteGroupContext, RouteRef } from './types';
 
@@ -7,7 +7,7 @@ interface RouteGroupProps {
   baseUrl?: string;
 }
 
-const RouteGroup = ({ children, baseUrl }: RouteGroupProps) => {
+const RouteGroup: FC<RouteGroupProps> = ({ children, baseUrl }) => {
   const { history } = useContext(RouterContext);
   const parentContext = useContext(RouteGroupContext);
   const routes = useRef<RouteRef[]>([]);
