@@ -9,7 +9,8 @@
     "format": "prettier --write \"**/*\"",
     "lint": "eslint -p tsconfig.json",
     "start": "npm run build:ts -- -w | npm run build:types -- -w",
-    "test": "jest"
+    "test": "jest",
+    "start:test": "jest --watch"
   },
   "husky": {
     "hooks": {
@@ -51,9 +52,9 @@
     "typescript": "^4.1.2"
   },
   "peerDependencies": {
-    "history": "^4.7.2",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "history": "^5.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "dependencies": {
     "path-to-regexp": "^6.2.0"

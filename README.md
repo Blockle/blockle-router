@@ -78,3 +78,38 @@ render(
   </Router>
 );
 ```
+
+### RouteGroup
+
+```tsx
+import { Router, Route, Link } from '@blockle/router';
+import createHistory from 'history/createBrowserHistory';
+
+render(
+  <Router history={createHistory}>
+    <RouteGroup>
+      <Route path="/contact">
+        Contact
+      </Route>
+      <Route path="/about">
+        Contact
+      </Route>
+      <Route noMatch>
+        Route not found
+      </Route>
+    </RouteGroup>
+    
+    <RouteGroup>
+      <Route path="/contact">
+        Contact
+      </Route>
+      <Route path="/about">
+        Contact
+      </Route>
+      <Route noMatch>
+        Route not found
+      </Route>
+    </RouteGroup>
+  </Router>
+);
+```
