@@ -1,6 +1,7 @@
 import React, {
   AnchorHTMLAttributes,
   FC,
+  MouseEventHandler,
   ReactNode,
   useContext,
   useLayoutEffect,
@@ -19,6 +20,7 @@ interface Props extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   activeClassName?: string;
   children: ReactNode;
   className?: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
   replace?: boolean;
   to: string;
 }
@@ -27,6 +29,7 @@ export const Link: FC<Props> = ({
   activeClassName = 'is-active',
   children,
   className,
+  onClick,
   replace = false,
   to,
   ...restProps
@@ -49,11 +52,19 @@ export const Link: FC<Props> = ({
     });
   }, list);
 
-  function onClick(event: React.MouseEvent<HTMLAnchorElement>) {
+  function clickHandler(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (onClick) {
+      onClick(event);
+    }
+
     if (!event.defaultPrevented && event.button === 0 && !isModifierEvent(event)) {
       event.preventDefault();
 
-      history.push(to);
+      if (replace) {
+        history.replace(to);
+      } else {
+        history.push(to);
+      }
     }
   }
 
@@ -61,7 +72,7 @@ export const Link: FC<Props> = ({
     <a
       href={to}
       className={[className, !!match && activeClassName].join(' ')}
-      onClick={onClick}
+      onClick={clickHandler}
       {...restProps}
     >
       {children}

@@ -124,6 +124,7 @@ render(
 * `replace` `boolean` default `false`
 * `className` `string`
 * `activeClassName` `string` default `'is-active'`
+* `onClick` `MouseEventHandler<HTMLAnchorElement>`
 
 ```tsx
 import { Router, Link } from '@blockle/router';
