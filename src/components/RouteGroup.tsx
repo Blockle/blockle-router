@@ -32,7 +32,7 @@ export const RouteGroup: FC<Props> = ({ children, baseUrl }) => {
       const { pathname } = history.location;
       let hasMatch = false;
 
-      const noMatchRoutes = routes.current.filter(({ getMatch, noMatch, setMatch }) => {
+      const noMatchRoutes = routes.current.filter(({ getMatch, noMatch, setMatch, exclude }) => {
         // Skip "404" routes
         if (noMatch) {
           return true;
@@ -41,7 +41,7 @@ export const RouteGroup: FC<Props> = ({ children, baseUrl }) => {
         // Continue to check if route matches given pathname
         const match = getMatch(pathname);
 
-        if (match) {
+        if (match && !exclude) {
           hasMatch = true;
         }
 

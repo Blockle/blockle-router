@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { cleanup, render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Link } from './Link';
 import { Route } from './Route';
 import { Router } from './Router';
 
@@ -37,6 +38,24 @@ describe('Route', () => {
         <Route noMatch>NO MATCH</Route>
       </Router>,
     );
+
+    expect(() => getByText('FOO')).toThrow();
+    expect(() => getByText('BAR')).toThrow();
+    expect(getByText('NO MATCH')).toBeTruthy();
+  });
+
+  it('should render non matching on route change', () => {
+    const { getByText } = render(
+      <Router history={history}>
+        <Route path="/" exact>
+          FOO
+        </Route>
+        <Route path="/bar">BAR</Route>
+        <Route noMatch>NO MATCH</Route>
+      </Router>,
+    );
+
+    history.push('/help');
 
     expect(() => getByText('FOO')).toThrow();
     expect(() => getByText('BAR')).toThrow();
@@ -97,8 +116,6 @@ describe('Route', () => {
   });
 
   it('should always render with correct params', () => {
-    history.push('/foo/bar-value/baz-value');
-
     const { getByText } = render(
       <Router history={history}>
         <Route
@@ -116,6 +133,23 @@ describe('Route', () => {
       </Router>,
     );
 
+    history.push('/foo/bar-value/baz-value');
+
     expect(getByText('bar-value - baz-value')).toBeTruthy();
+  });
+
+  it('should exclude links from matches', () => {
+    const { getByText } = render(
+      <Router history={history}>
+        <Link to="/">Link</Link>
+        <Route path="/foo">FOO</Route>
+        <Route path="/bar">BAR</Route>
+        <Route noMatch>NO MATCH</Route>
+      </Router>,
+    );
+
+    expect(() => getByText('FOO')).toThrow();
+    expect(() => getByText('BAR')).toThrow();
+    expect(getByText('NO MATCH')).toBeTruthy();
   });
 });

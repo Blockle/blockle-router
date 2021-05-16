@@ -8,13 +8,13 @@ Customisable with history
 Install with yarn
 
 ```bash
-yarn add @blockle/router
+yarn add @blockle/router history
 ```
 
 Install with npm
 
 ```bash
-npm install --save @blockle/router
+npm install --save @blockle/router history
 ```
 
 ### Example
@@ -81,6 +81,8 @@ render(
 
 ### RouteGroup
 
+NOTE RouteGroup handle their own 404
+
 ```tsx
 import { Router, Route, Link } from '@blockle/router';
 import createHistory from 'history/createBrowserHistory';
@@ -88,6 +90,7 @@ import createHistory from 'history/createBrowserHistory';
 render(
   <Router history={createHistory}>
     <RouteGroup>
+      {/* Matches "/contact */}
       <Route path="/contact">
         Contact
       </Route>
@@ -98,8 +101,9 @@ render(
         Route not found
       </Route>
     </RouteGroup>
-    
-    <RouteGroup>
+
+    <RouteGroup baseUrl="/foo">
+      {/* Matches "/foo/contact */}
       <Route path="/contact">
         Contact
       </Route>
@@ -110,6 +114,25 @@ render(
         Route not found
       </Route>
     </RouteGroup>
+  </Router>
+);
+```
+
+### Link
+
+* `to` `string`
+* `replace` `boolean` default `false`
+* `className` `string`
+* `activeClassName` `string` default `'is-active'`
+
+```tsx
+import { Router, Link } from '@blockle/router';
+import createHistory from 'history/createBrowserHistory';
+
+render(
+  <Router>
+    <Link to="/foo">Link content</Link>
+    <Link to="/foo" replace>Link content</Link>
   </Router>
 );
 ```

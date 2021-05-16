@@ -17,15 +17,19 @@ interface Props {
 
 export const Route: FC<Props> = ({ children, exact = false, noMatch = false, path, render }) => {
   const history = useHistory();
-  const parentContext = useContext(RouteGroupContext);
+  const routerContext = useContext(RouteGroupContext);
+  // Converts path(s) to an array
   const paths = Array.isArray(path) ? path : [path];
-  const fullPaths = paths.map((path) => cleanupPath(parentContext.baseUrl + '/' + (path || '')));
+  // Prepend baseUrl
+  const fullPaths = paths.map((path) => cleanupPath(routerContext.baseUrl + '/' + (path || '')));
   const getMatch = useMemo(() => createPathsMatcher(fullPaths, exact), paths);
+  // Get a route match on first render only
   const initialMatch = useMemo(() => getMatch(history.location.pathname), []);
   const [match, setMatch] = useState<null | Params>(initialMatch);
 
   useLayoutEffect(() => {
-    return parentContext.register({
+    // Register route to parent RouteGroup
+    return routerContext.register({
       getMatch,
       setMatch,
       noMatch,
