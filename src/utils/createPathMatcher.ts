@@ -1,7 +1,9 @@
 import { Key, pathToRegexp } from 'path-to-regexp';
 import { Params } from '../types';
 
-export const createPathsMatcher = (paths: string[], exact: boolean) => {
+type Matcher = (route: string) => Params | null;
+
+export function createPathsMatcher(paths: string[], exact: boolean): Matcher {
   const matchers = paths.map((path) => {
     const keys: Key[] = [];
 
@@ -35,4 +37,4 @@ export const createPathsMatcher = (paths: string[], exact: boolean) => {
 
     return matches[0] || null;
   };
-};
+}
