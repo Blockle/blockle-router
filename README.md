@@ -1,4 +1,4 @@
-# blockle-router
+# @blockle/router
 
 Lightweight (browser only) router for React ~3k gzip.  
 Customisable with history
