@@ -2,7 +2,6 @@ import React, {
   AnchorHTMLAttributes,
   FC,
   MouseEventHandler,
-  ReactNode,
   useContext,
   useLayoutEffect,
   useMemo,
@@ -16,16 +15,15 @@ import { createPathsMatcher } from '../utils/createPathMatcher';
 const isModifierEvent = (event: React.MouseEvent<HTMLAnchorElement>) =>
   !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
 
-interface Props extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
+export interface LinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   activeClassName?: string;
-  children: ReactNode;
   className?: string;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
   replace?: boolean;
   to: string;
 }
 
-export const Link: FC<Props> = ({
+export const Link: FC<LinkProps> = ({
   activeClassName = 'is-active',
   children,
   className,
