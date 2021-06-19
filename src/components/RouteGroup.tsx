@@ -51,15 +51,12 @@ export const RouteGroup: FC<RouterProps> = ({ children, baseUrl = '/' }) => {
       noMatchRoutes.forEach(({ updateMatch }) => updateMatch(hasMatch ? null : {}));
     }
 
-    let raf = requestAnimationFrame(update);
+    update();
+
     const unlistenHistory = history.listen(update);
-    const unlistenStore = store.subscribe(() => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
-    });
+    const unlistenStore = store.subscribe(update);
 
     return () => {
-      cancelAnimationFrame(raf);
       unlistenHistory();
       unlistenStore();
     };

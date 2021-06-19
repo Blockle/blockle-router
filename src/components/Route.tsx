@@ -8,35 +8,34 @@ import { RouteGroup } from './RouteGroup';
 
 export interface RouteProps {
   exact?: boolean;
+  exclude?: boolean;
   noMatch?: boolean;
   path?: string | string[];
   render?: RenderComponent;
-  debugId?: string;
 }
 
 export const Route: FC<RouteProps> = ({
   children,
-  path,
   exact = false,
+  exclude = false,
   noMatch = false, // Is "404"
+  path,
   render,
-  debugId,
 }) => {
   const routeGroup = useContext(RouteGroupContext);
+  const [match, setMatch] = useState<null | Params>(null);
   const { baseUrl } = routeGroup.getState();
   const paths = !path ? [] : Array.isArray(path) ? path : [path];
-  const [match, setMatch] = useState<null | Params>(null);
+  const fullPaths = paths.map((path) => cleanupPath(baseUrl + '/' + (path || '')));
 
   useLayoutEffect(() => {
     const state = routeGroup.getState();
-    const fullPaths = paths.map((path) => cleanupPath(baseUrl + '/' + (path || '')));
     const routeEntry: RouteEntry = {
-      exclude: false,
+      exclude,
+      matcher: createPathsMatcher(fullPaths, exact),
       noMatch,
       paths: fullPaths,
       updateMatch: setMatch,
-      matcher: createPathsMatcher(fullPaths, exact),
-      debugId,
     };
 
     routeGroup.setState({
@@ -54,5 +53,5 @@ export const Route: FC<RouteProps> = ({
     };
   }, [...paths]);
 
-  return <RouteGroup baseUrl={paths[0]}>{renderRoute({ children, match, render })}</RouteGroup>;
+  return <RouteGroup baseUrl={fullPaths[0]}>{renderRoute({ children, match, render })}</RouteGroup>;
 };

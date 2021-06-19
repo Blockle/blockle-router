@@ -9,7 +9,6 @@ export interface Route {
   noMatch: boolean;
   paths: string[];
   updateMatch: (match: null | Params) => void;
-  debugId?: string;
 }
 
 export interface RouteGroup {
