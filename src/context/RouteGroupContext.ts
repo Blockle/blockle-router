@@ -1,12 +1,22 @@
 import { createContext } from 'react';
-import { RouteRef } from '../types';
+import { ContextStore, createContextStore } from '../contextStore';
+import { Params } from '../types';
+import { Matcher } from '../utils/createPathsMatcher';
 
-export interface RouteGroupContextType {
-  baseUrl: string;
-  register: (route: RouteRef) => () => void;
+export interface Route {
+  exclude: boolean;
+  matcher: Matcher;
+  noMatch: boolean;
+  paths: string[];
+  updateMatch: (match: null | Params) => void;
+  debugId?: string;
 }
 
-export const RouteGroupContext = createContext<RouteGroupContextType>({
-  baseUrl: '/',
-  register: () => () => {},
-});
+export interface RouteGroup {
+  baseUrl: string;
+  routes: Route[];
+}
+
+export const RouteGroupContext = createContext<ContextStore<RouteGroup>>(
+  createContextStore({ baseUrl: '/', routes: [] }),
+);

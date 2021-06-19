@@ -1,64 +1,69 @@
-import React, { FC, useContext, useEffect, useMemo, useRef } from 'react';
-import { RouteGroupContext, RouteGroupContextType } from '../context/RouteGroupContext';
+import React, { FC, useEffect } from 'react';
+import { RouteGroup as RouteGroupEntry, RouteGroupContext } from '../context/RouteGroupContext';
+import { createContextStore } from '../contextStore';
 import { useHistory } from '../hooks/useHistory';
-import { RouteRef } from '../types';
+import { useRefMemo } from '../hooks/useRefMemo';
 
-interface Props {
-  children: React.ReactNode;
+export interface RouterProps {
   baseUrl?: string;
 }
 
-export const RouteGroup: FC<Props> = ({ children, baseUrl }) => {
+export const RouteGroup: FC<RouterProps> = ({ children, baseUrl = '/' }) => {
   const history = useHistory();
-  const parentContext = useContext(RouteGroupContext);
-  const routes = useRef<RouteRef[]>([]);
+  const store = useRefMemo(() => createContextStore<RouteGroupEntry>({ baseUrl, routes: [] }));
 
-  const context: RouteGroupContextType = useMemo(
-    (): RouteGroupContextType => ({
-      baseUrl: baseUrl || parentContext.baseUrl,
-      register: (route) => {
-        routes.current = [...routes.current, route];
-
-        return () => {
-          routes.current = routes.current.filter((_route) => route !== _route);
-        };
-      },
-    }),
-    [baseUrl],
-  );
-
+  // Update "baseUrl"
   useEffect(() => {
-    const update = () => {
-      const { pathname } = history.location;
-      let hasMatch = false;
+    const state = store.getState();
 
-      const noMatchRoutes = routes.current.filter(({ getMatch, noMatch, setMatch, exclude }) => {
+    store.setState({
+      ...state,
+      baseUrl,
+    });
+  }, [baseUrl]);
+
+  // Update on history change
+  useEffect(() => {
+    function update() {
+      let hasMatch = false;
+      const { routes } = store.getState();
+      const { pathname } = history.location;
+
+      const noMatchRoutes = routes.filter(({ exclude, matcher, noMatch, updateMatch }) => {
         // Skip "404" routes
         if (noMatch) {
           return true;
         }
 
         // Continue to check if route matches given pathname
-        const match = getMatch(pathname);
+        const match = matcher(pathname);
 
         if (match && !exclude) {
           hasMatch = true;
         }
 
         // Update state of <Route /> components
-        setMatch(match);
+        updateMatch(match);
 
         return false;
       });
 
-      noMatchRoutes.forEach(({ setMatch }) => setMatch(hasMatch ? null : {}));
+      noMatchRoutes.forEach(({ updateMatch }) => updateMatch(hasMatch ? null : {}));
+    }
+
+    let raf = requestAnimationFrame(update);
+    const unlistenHistory = history.listen(update);
+    const unlistenStore = store.subscribe(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      unlistenHistory();
+      unlistenStore();
     };
+  }, []);
 
-    // Initial render, need to update the state of `noMatch` routes
-    update();
-
-    return history.listen(update);
-  }, [baseUrl]);
-
-  return <RouteGroupContext.Provider value={context}>{children}</RouteGroupContext.Provider>;
+  return <RouteGroupContext.Provider value={store}>{children}</RouteGroupContext.Provider>;
 };

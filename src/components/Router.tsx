@@ -3,13 +3,12 @@ import React, { FC } from 'react';
 import { RouterContext } from '../context/RouterContext';
 import { RouteGroup } from './RouteGroup';
 
-interface Props {
-  children: React.ReactNode;
+export interface RouterProps {
   history: History;
   baseUrl?: string;
 }
 
-export const Router: FC<Props> = ({ children, history, baseUrl = '/' }) => {
+export const Router: FC<RouterProps> = ({ children, history, baseUrl = '/' }) => {
   return (
     <RouterContext.Provider value={{ history }}>
       <RouteGroup baseUrl={baseUrl}>{children}</RouteGroup>
