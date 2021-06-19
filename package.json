@@ -1,6 +1,6 @@
 {
   "name": "@blockle/router",
-  "version": "2.1.2",
+  "version": "3.0.0-alpha.1",
   "description": "Blockle React Router",
   "scripts": {
     "build:ts": "rollup -c",
