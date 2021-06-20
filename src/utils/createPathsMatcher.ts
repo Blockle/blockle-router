@@ -1,7 +1,7 @@
 import { Key, pathToRegexp } from 'path-to-regexp';
 import { Params } from '../types';
 
-type Matcher = (route: string) => Params | null;
+export type Matcher = (route: string) => Params | null;
 
 export function createPathsMatcher(paths: string[], exact: boolean): Matcher {
   const matchers = paths.map((path) => {
@@ -13,10 +13,10 @@ export function createPathsMatcher(paths: string[], exact: boolean): Matcher {
     };
   });
 
-  return (route: string) => {
+  return (pathname: string) => {
     const matches = matchers
       .map((matcher) => {
-        const match = matcher.path.exec(route);
+        const match = matcher.path.exec(pathname);
         const params: Params = {};
 
         if (!match) {

@@ -6,5 +6,5 @@ export interface RouterContextType {
 }
 
 export const RouterContext = createContext<RouterContextType>({
-  history: undefined as any,
+  history: undefined as never,
 });

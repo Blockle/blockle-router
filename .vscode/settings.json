@@ -1,0 +1,16 @@
+{
+  "tslint.enable": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.requireConfig": true,
+  "stylelint.enable": true,
+  "css.validate": false,
+  "[html]": {
+    "editor.formatOnSave": false
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "editor.codeActionsOnSave": [
+    "source.organizeImports",
+    "source.fixAll.eslint"
+  ],
+  "typescript.preferences.importModuleSpecifier": "relative"
+}

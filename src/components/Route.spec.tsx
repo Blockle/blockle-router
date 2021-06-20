@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, render } from '@testing-library/react';
+import { act, cleanup, render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Link } from './Link';
@@ -8,10 +8,11 @@ import { Router } from './Router';
 
 let history = createMemoryHistory();
 
-afterEach(() => {
+beforeEach(() => {
   history = createMemoryHistory();
-  afterEach(cleanup);
 });
+
+afterEach(cleanup);
 
 describe('Route', () => {
   it('should render matching route', () => {
@@ -55,7 +56,9 @@ describe('Route', () => {
       </Router>,
     );
 
-    history.push('/help');
+    act(() => {
+      history.push('/help');
+    });
 
     expect(() => getByText('FOO')).toThrow();
     expect(() => getByText('BAR')).toThrow();
@@ -133,7 +136,9 @@ describe('Route', () => {
       </Router>,
     );
 
-    history.push('/foo/bar-value/baz-value');
+    act(() => {
+      history.push('/foo/bar-value/baz-value');
+    });
 
     expect(getByText('bar-value - baz-value')).toBeTruthy();
   });

@@ -1,40 +1,57 @@
-import React, { FC, useContext, useLayoutEffect, useMemo, useState } from 'react';
-import { RouteGroupContext } from '../context/RouteGroupContext';
-import { useHistory } from '../hooks/useHistory';
+import React, { FC, useContext, useLayoutEffect, useState } from 'react';
+import { RouteGroupContext, RouteGroupContextEntryType } from '../context/RouteGroupContext';
 import { Params } from '../types';
-import { cleanupPath } from '../utils/cleanupPath';
-import { createPathsMatcher } from '../utils/createPathMatcher';
+import { cleanPath } from '../utils/cleanPath';
+import { createPathsMatcher } from '../utils/createPathsMatcher';
 import { RenderComponent, renderRoute } from '../utils/renderRoute';
 import { RouteGroup } from './RouteGroup';
 
-interface Props {
-  children?: React.ReactNode;
+export interface RouteProps {
   exact?: boolean;
+  exclude?: boolean;
   noMatch?: boolean;
   path?: string | string[];
   render?: RenderComponent;
 }
 
-export const Route: FC<Props> = ({ children, exact = false, noMatch = false, path, render }) => {
-  const history = useHistory();
-  const routerContext = useContext(RouteGroupContext);
-  // Converts path(s) to an array
-  const paths = Array.isArray(path) ? path : [path];
-  // Prepend baseUrl
-  const fullPaths = paths.map((path) => cleanupPath(routerContext.baseUrl + '/' + (path || '')));
-  const getMatch = useMemo(() => createPathsMatcher(fullPaths, exact), paths);
-  // Get a route match on first render only
-  const initialMatch = useMemo(() => getMatch(history.location.pathname), []);
-  const [match, setMatch] = useState<null | Params>(initialMatch);
+export const Route: FC<RouteProps> = ({
+  children,
+  exact = false,
+  exclude = false,
+  noMatch = false, // Is "404"
+  path,
+  render,
+}) => {
+  const routeGroup = useContext(RouteGroupContext);
+  const [match, setMatch] = useState<null | Params>(null);
+  const { baseUrl } = routeGroup.getState();
+  const paths = !path ? [] : Array.isArray(path) ? path : [path];
+  const fullPaths = paths.map((path) => cleanPath(baseUrl + '/' + (path || '')));
 
   useLayoutEffect(() => {
-    // Register route to parent RouteGroup
-    return routerContext.register({
-      getMatch,
-      setMatch,
+    const state = routeGroup.getState();
+    const routeEntry: RouteGroupContextEntryType = {
+      exclude,
+      matcher: createPathsMatcher(fullPaths, exact),
       noMatch,
+      paths: fullPaths,
+      updateMatch: setMatch,
+    };
+
+    routeGroup.setState({
+      ...state,
+      routes: [...state.routes, routeEntry],
     });
-  }, paths);
+
+    return () => {
+      const state = routeGroup.getState();
+
+      routeGroup.setState({
+        ...state,
+        routes: state.routes.filter((route) => route !== routeEntry),
+      });
+    };
+  }, [...paths]);
 
   return <RouteGroup baseUrl={fullPaths[0]}>{renderRoute({ children, match, render })}</RouteGroup>;
 };

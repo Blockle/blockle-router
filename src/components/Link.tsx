@@ -1,16 +1,6 @@
-import React, {
-  AnchorHTMLAttributes,
-  FC,
-  MouseEventHandler,
-  useContext,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { RouteGroupContext } from '../context/RouteGroupContext';
+import React, { AnchorHTMLAttributes, FC, MouseEventHandler } from 'react';
 import { useHistory } from '../hooks/useHistory';
-import { Params } from '../types';
-import { createPathsMatcher } from '../utils/createPathMatcher';
+import { Route } from './Route';
 
 const isModifierEvent = (event: React.MouseEvent<HTMLAnchorElement>) =>
   !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
@@ -33,22 +23,6 @@ export const Link: FC<LinkProps> = ({
   ...restProps
 }) => {
   const history = useHistory();
-  const routerContext = useContext(RouteGroupContext);
-  const list = [to];
-  const getMatch = useMemo(() => createPathsMatcher(list, true), list);
-  // Get a route match on first render only
-  const initialMatch = useMemo(() => getMatch(history.location.pathname), []);
-  const [match, setMatch] = useState<null | Params>(initialMatch);
-
-  useLayoutEffect(() => {
-    // Register route
-    return routerContext.register({
-      getMatch,
-      setMatch,
-      noMatch: false,
-      exclude: true,
-    });
-  }, list);
 
   function clickHandler(event: React.MouseEvent<HTMLAnchorElement>) {
     if (onClick) {
@@ -67,13 +41,20 @@ export const Link: FC<LinkProps> = ({
   }
 
   return (
-    <a
-      href={to}
-      className={[className, !!match && activeClassName].join(' ')}
-      onClick={clickHandler}
-      {...restProps}
-    >
-      {children}
-    </a>
+    <Route
+      exclude
+      exact
+      path={to}
+      render={(match) => (
+        <a
+          href={to}
+          className={[className, match ? activeClassName : ''].join(' ')}
+          onClick={clickHandler}
+          {...restProps}
+        >
+          {children}
+        </a>
+      )}
+    />
   );
 };

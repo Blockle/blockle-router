@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { RouterContext } from '../context/RouterContext';
 
-export const useHistory = () => {
+export function useHistory() {
   return useContext(RouterContext).history;
-};
+}

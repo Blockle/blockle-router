@@ -6,10 +6,11 @@ import { Router } from './Router';
 
 let history = createMemoryHistory();
 
-afterEach(() => {
+beforeEach(() => {
   history = createMemoryHistory();
-  afterEach(cleanup);
 });
+
+afterEach(cleanup);
 
 describe('Router', () => {
   it('should render children', () => {
