@@ -9,7 +9,7 @@ interface RenderRoute {
   render?: RenderComponent;
 }
 
-export function renderRoute({ children, match, render }: RenderRoute): ReactNode | null {
+export function renderRoute({ children, match, render }: RenderRoute): ReactNode {
   if (render) {
     return render(!!match, match || {});
   }

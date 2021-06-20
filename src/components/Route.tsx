@@ -1,7 +1,7 @@
 import React, { FC, useContext, useLayoutEffect, useState } from 'react';
-import { Route as RouteEntry, RouteGroupContext } from '../context/RouteGroupContext';
+import { RouteGroupContext, RouteGroupContextEntryType } from '../context/RouteGroupContext';
 import { Params } from '../types';
-import { cleanupPath } from '../utils/cleanupPath';
+import { cleanPath } from '../utils/cleanPath';
 import { createPathsMatcher } from '../utils/createPathsMatcher';
 import { RenderComponent, renderRoute } from '../utils/renderRoute';
 import { RouteGroup } from './RouteGroup';
@@ -26,11 +26,11 @@ export const Route: FC<RouteProps> = ({
   const [match, setMatch] = useState<null | Params>(null);
   const { baseUrl } = routeGroup.getState();
   const paths = !path ? [] : Array.isArray(path) ? path : [path];
-  const fullPaths = paths.map((path) => cleanupPath(baseUrl + '/' + (path || '')));
+  const fullPaths = paths.map((path) => cleanPath(baseUrl + '/' + (path || '')));
 
   useLayoutEffect(() => {
     const state = routeGroup.getState();
-    const routeEntry: RouteEntry = {
+    const routeEntry: RouteGroupContextEntryType = {
       exclude,
       matcher: createPathsMatcher(fullPaths, exact),
       noMatch,

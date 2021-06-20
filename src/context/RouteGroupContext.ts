@@ -3,7 +3,7 @@ import { ContextStore, createContextStore } from '../contextStore';
 import { Params } from '../types';
 import { Matcher } from '../utils/createPathsMatcher';
 
-export interface Route {
+export interface RouteGroupContextEntryType {
   exclude: boolean;
   matcher: Matcher;
   noMatch: boolean;
@@ -11,11 +11,11 @@ export interface Route {
   updateMatch: (match: null | Params) => void;
 }
 
-export interface RouteGroup {
+export interface RouteGroupContextType {
   baseUrl: string;
-  routes: Route[];
+  routes: RouteGroupContextEntryType[];
 }
 
-export const RouteGroupContext = createContext<ContextStore<RouteGroup>>(
+export const RouteGroupContext = createContext<ContextStore<RouteGroupContextType>>(
   createContextStore({ baseUrl: '/', routes: [] }),
 );

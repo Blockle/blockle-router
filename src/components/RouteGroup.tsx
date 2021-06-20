@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { RouteGroup as RouteGroupEntry, RouteGroupContext } from '../context/RouteGroupContext';
+import { RouteGroupContext, RouteGroupContextType } from '../context/RouteGroupContext';
 import { createContextStore } from '../contextStore';
 import { useHistory } from '../hooks/useHistory';
 import { useRefMemo } from '../hooks/useRefMemo';
@@ -10,7 +10,9 @@ export interface RouterProps {
 
 export const RouteGroup: FC<RouterProps> = ({ children, baseUrl = '/' }) => {
   const history = useHistory();
-  const store = useRefMemo(() => createContextStore<RouteGroupEntry>({ baseUrl, routes: [] }));
+  const store = useRefMemo(() =>
+    createContextStore<RouteGroupContextType>({ baseUrl, routes: [] }),
+  );
 
   // Update "baseUrl"
   useEffect(() => {
