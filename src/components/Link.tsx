@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes, FC, MouseEventHandler } from 'react';
+import React, { AnchorHTMLAttributes, forwardRef, MouseEventHandler } from 'react';
 import { useHistory } from '../hooks/useHistory';
 import { Route } from './Route';
 
@@ -13,15 +13,18 @@ export interface LinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>,
   to: string;
 }
 
-export const Link: FC<LinkProps> = ({
-  activeClassName = 'is-active',
-  children,
-  className,
-  onClick,
-  replace = false,
-  to,
-  ...restProps
-}) => {
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
+  {
+    activeClassName = 'is-active',
+    children,
+    className,
+    onClick,
+    replace = false,
+    to,
+    ...restProps
+  },
+  ref,
+) {
   const history = useHistory();
 
   function clickHandler(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -47,6 +50,7 @@ export const Link: FC<LinkProps> = ({
       path={to}
       render={(match) => (
         <a
+          ref={ref}
           href={to}
           className={[className, match ? activeClassName : ''].join(' ')}
           onClick={clickHandler}
@@ -57,4 +61,4 @@ export const Link: FC<LinkProps> = ({
       )}
     />
   );
-};
+});
