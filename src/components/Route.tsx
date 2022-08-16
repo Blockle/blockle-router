@@ -1,4 +1,4 @@
-import React, { FC, useContext, useLayoutEffect, useState } from 'react';
+import React, { FC, ReactNode, useContext, useLayoutEffect, useState } from 'react';
 import { RouteGroupContext, RouteGroupContextEntryType } from '../context/RouteGroupContext';
 import { Params } from '../types';
 import { cleanPath } from '../utils/cleanPath';
@@ -7,6 +7,7 @@ import { RenderComponent, renderRoute } from '../utils/renderRoute';
 import { RouteGroup } from './RouteGroup';
 
 export interface RouteProps {
+  children?: ReactNode;
   exact?: boolean;
   exclude?: boolean;
   noMatch?: boolean;
