@@ -1,14 +1,15 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, ReactNode, useEffect } from 'react';
 import { RouteGroupContext, RouteGroupContextType } from '../context/RouteGroupContext';
 import { createContextStore } from '../contextStore';
 import { useHistory } from '../hooks/useHistory';
 import { useRefMemo } from '../hooks/useRefMemo';
 
-export interface RouterProps {
+export interface RouteGroupProps {
   baseUrl?: string;
+  children: ReactNode;
 }
 
-export const RouteGroup: FC<RouterProps> = ({ children, baseUrl = '/' }) => {
+export const RouteGroup: FC<RouteGroupProps> = ({ children, baseUrl = '/' }) => {
   const history = useHistory();
   const store = useRefMemo(() =>
     createContextStore<RouteGroupContextType>({ baseUrl, routes: [] }),
